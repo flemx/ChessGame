@@ -126,7 +126,9 @@ public class ChessGUI extends JFrame {
      * @param convert2D
      */
     private void setPiece(Square square, Integer convert2D){
+
         String resource = "resource/";
+        //String resource = "";
         resource += (square.getPiece().getColor() == PieceColor.WHITE) ? "White" : "Black";
 
         switch (square.getPiece().getType())

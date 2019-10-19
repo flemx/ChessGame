@@ -1,13 +1,13 @@
 package ChessProject;
 
-import ChessProject.game.*;
+import ChessProject.game.ChessGUI;
 import javax.swing.*;
 
 public class App extends JFrame{
 
     /*
-     Main method that gets the ball moving.
-     */
+     Main method that gets the ball moving.*/
+
     public static void main(String[] args) {
         JFrame frame = new ChessGUI();
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -16,5 +16,7 @@ public class App extends JFrame{
         frame.setLocationRelativeTo(null);
        frame.setVisible(true);
     }
+
+
 
 }
