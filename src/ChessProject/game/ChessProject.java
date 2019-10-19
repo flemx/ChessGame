@@ -5,7 +5,8 @@ import ChessProject.pieces.*;
 /**
  * @author dfleminks
  * The main Class that controlls most of the logic of the game
- * It holds the moves, Board and active player
+ * It holds the board and active player (WILL ADD MOVE CLASS LATER TO KEEP TRACK OF ALL MOVES)
+ * Evaluates all the moves based on the valid directions
  */
 public class ChessProject {
 
