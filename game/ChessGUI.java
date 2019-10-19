@@ -7,6 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
+/**
+ *  @author dfleminks
+ *  Modified from give examnple
+ *  - Seperated Chess logic from GUI -
+ */
 public class ChessGUI extends JFrame {
 
 
@@ -23,6 +28,9 @@ public class ChessGUI extends JFrame {
     private JLabel pieces;
 
 
+    /**
+     *   MouseAdapter Class to handle mouse events
+     */
     private class BoardMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -54,17 +62,16 @@ public class ChessGUI extends JFrame {
             if(chessPiece == null) return;
             chessPiece.setVisible(false);
 
-            System.out.println("Starty: " + startY);
-            System.out.println("e.gety:  " + (e.getY()/75));
-
             chessGame.canMoveTo(new Position(startX,startY), new Position((e.getX()/75),(e.getY()/75)));
             renderBoard();
         }
     }
 
 
+    /**
+     *   Draws the board in
+     */
     public ChessGUI(){
-
         // Use BoardMouseAdapter class to capture mouse events
         BoardMouseAdapter mouseAdapter = new BoardMouseAdapter();
 

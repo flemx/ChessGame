@@ -8,9 +8,13 @@ import ChessProject.pieces.*;
  */
 public class ChessBoard {
 
-    private Square[][] boardSquares = new Square[8][8];
+    private Square[][] boardSquares;
+
+
 
     public ChessBoard(){
+        boardSquares  = new Square[8][8];
+
         initializeSquares();
         initializePieces();
 
