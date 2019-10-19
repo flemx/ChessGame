@@ -55,22 +55,7 @@ public class Pawn extends Piece{
         return false;
     }
 
-    /**
-     * Returns boolean to check if valid attack move
-     * (PAWN SPECIFIC ONLY)
-     */
-    public boolean checkAttack(Position fromPos, Position toPos){
-        Integer fromX = fromPos.getX();
-        Integer toX = toPos.getX();
-        Integer fromY = fromPos.getY();
-        Integer toY = toPos.getY();
 
-        if( Math.abs(toPos.getY() - fromPos.getY()) == 1 && Math.abs(fromX - toX) == 1){
-            return true;
-        }
-
-        return false;
-    }
 
 
 

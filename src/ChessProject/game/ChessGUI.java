@@ -127,6 +127,7 @@ public class ChessGUI extends JFrame {
      */
     private void setPiece(Square square, Integer convert2D){
 
+        /* Try to add "resource/ to variable if piece images don't render */
         String resource = "resource/";
         //String resource = "";
         resource += (square.getPiece().getColor() == PieceColor.WHITE) ? "White" : "Black";

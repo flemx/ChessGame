@@ -49,9 +49,9 @@ public class ChessBoard {
         boardSquares[1][0].setPiece(new Knight(PieceColor.WHITE));
         boardSquares[6][0].setPiece(new Knight(PieceColor.WHITE));
         boardSquares[0][0].setPiece(new Rook(PieceColor.WHITE));
-        boardSquares[7][0].setPiece(new Rook(PieceColor.WHITE));
+        boardSquares[7][0].setPiece(new Rook(PieceColor.WHITE)); */
         boardSquares[3][0].setPiece(new Queen(PieceColor.WHITE));
-        */
+
 
 
 

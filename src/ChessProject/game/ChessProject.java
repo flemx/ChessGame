@@ -2,6 +2,11 @@ package ChessProject.game;
 
 import ChessProject.pieces.*;
 
+/**
+ * @author dfleminks
+ * The main Class that controlls most of the logic of the game
+ * It holds the moves, Board and active player
+ */
 public class ChessProject {
 
     private ChessBoard board;
@@ -50,16 +55,24 @@ public class ChessProject {
                     canMove =  evaluateNormalMove(squareFrom,squareTo);
                     break;
             }
+        }else{
+            System.out.println("It is the other players turn");
         }
 
 
         if(canMove){
             System.out.println("Move valid");
-            System.out.println("--------------------------------------------------");
 
-            board.setPiece(to, squareFrom.getPiece());
+            // Set piece and check for pawn promotion
+            if(squareFrom.getPiece().getType() == PieceType.PAWN){
+                promotePawn(to, squareFrom);
+            }else{
+                board.setPiece(to, squareFrom.getPiece());
+            }
+
             board.removePiece(from);
             changePlayer();
+            System.out.println("--------------------------------------------------");
         }
         else{
             System.out.println("Unvalid move");
@@ -69,7 +82,26 @@ public class ChessProject {
     }
 
     /**
-     * Evaluate if piece can make move or can attack, val;id for most pieces
+     *  Check if the pawn is allowed to promote if reached end of deck upon valid move
+     * @param to
+     * @param squareFrom
+     */
+    private void promotePawn(Position to,Square squareFrom){
+        if(squareFrom.getPiece().getColor() == PieceColor.WHITE && to.getY() == 7){
+            board.setPiece(to, new Queen(PieceColor.WHITE));
+            System.out.println("White pawn promoted to White Queen!");
+        }
+        else if(squareFrom.getPiece().getColor() == PieceColor.BLACK && to.getY() == 0){
+            board.setPiece(to, new Queen(PieceColor.BLACK));
+            System.out.println("Black pawn promoted to Black Queen!");
+        }
+        else{
+            board.setPiece(to, squareFrom.getPiece());
+        }
+    }
+
+    /**
+     * Evaluate if piece can make move or can attack, valid for most pieces
      * @param squareFrom
      * @param squareTo
      * @return
@@ -102,6 +134,7 @@ public class ChessProject {
         if((squareFrom.piecePresent() &&
                 squareFrom.getPiece().validMove(squareFrom.getPosition(),squareTo.getPosition())) &&
                 !squareTo.piecePresent()){
+
             return true;
         }
 

@@ -56,60 +56,60 @@ import javax.swing.*;
 			// Setting up the Initial Chess board.
 
 			for(int i=8;i < 16; i++){
-				pieces = new JLabel( new ImageIcon("resource/WhitePawn.png") );
+				pieces = new JLabel( new ImageIcon("/WhitePawn.png") );
 				panels = (JPanel)chessBoard.getComponent(i);
 				panels.add(pieces);
 			}
-			pieces = new JLabel( new ImageIcon("resource/WhiteRook.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteRook.png") );
 			panels = (JPanel)chessBoard.getComponent(0);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteKnight.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteKnight.png") );
 			panels = (JPanel)chessBoard.getComponent(1);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteKnight.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteKnight.png") );
 			panels = (JPanel)chessBoard.getComponent(6);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteBishop.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteBishop.png") );
 			panels = (JPanel)chessBoard.getComponent(2);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteBishop.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteBishop.png") );
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteKing.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteKing.png") );
 			panels = (JPanel)chessBoard.getComponent(3);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteQueen.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteQueen.png") );
 			panels = (JPanel)chessBoard.getComponent(4);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/WhiteRook.png") );
+			pieces = new JLabel( new ImageIcon("/WhiteRook.png") );
 			panels = (JPanel)chessBoard.getComponent(7);
 			panels.add(pieces);
 			for(int i=48;i < 56; i++){
-				pieces = new JLabel( new ImageIcon("resource/BlackPawn.png") );
+				pieces = new JLabel( new ImageIcon("/BlackPawn.png") );
 				panels = (JPanel)chessBoard.getComponent(i);
 				panels.add(pieces);
 			}
-			pieces = new JLabel( new ImageIcon("resource/BlackRook.png") );
+			pieces = new JLabel( new ImageIcon("/BlackRook.png") );
 			panels = (JPanel)chessBoard.getComponent(56);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackKnight.png") );
+			pieces = new JLabel( new ImageIcon("/BlackKnight.png") );
 			panels = (JPanel)chessBoard.getComponent(57);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackKnight.png") );
+			pieces = new JLabel( new ImageIcon("/BlackKnight.png") );
 			panels = (JPanel)chessBoard.getComponent(62);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackBishop.png") );
+			pieces = new JLabel( new ImageIcon("/BlackBishop.png") );
 			panels = (JPanel)chessBoard.getComponent(58);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackBishop.png") );
+			pieces = new JLabel( new ImageIcon("/BlackBishop.png") );
 			panels = (JPanel)chessBoard.getComponent(61);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackKing.png") );
+			pieces = new JLabel( new ImageIcon("/BlackKing.png") );
 			panels = (JPanel)chessBoard.getComponent(59);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackQueen.png") );
+			pieces = new JLabel( new ImageIcon("/BlackQueen.png") );
 			panels = (JPanel)chessBoard.getComponent(60);
 			panels.add(pieces);
-			pieces = new JLabel( new ImageIcon("resource/BlackRook.png") );
+			pieces = new JLabel( new ImageIcon("/BlackRook.png") );
 			panels = (JPanel)chessBoard.getComponent(63);
 			panels.add(pieces);
 
@@ -228,7 +228,7 @@ import javax.swing.*;
 			System.out.println(pieceName);
 
 
-			if(pieceName.equals("resource/WhitePawn")){
+			if(pieceName.equals("/WhitePawn")){
 				if(startY == 1)
 				{System.out.println("true1 ");
 					if((startX == (e.getX()/75))&&((((e.getY()/75)-startY)==1)||((e.getY()/75)-startY)==2))
@@ -315,13 +315,13 @@ import javax.swing.*;
 					if (c instanceof JLabel){
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("resource/WhiteQueen.png") );
+						pieces = new JLabel( new ImageIcon("/WhiteQueen.png") );
 						parent = (JPanel)chessBoard.getComponent(location);
 						parent.add(pieces);
 					}
 					else{
 						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("resource/WhiteQueen.png") );
+						pieces = new JLabel( new ImageIcon("/WhiteQueen.png") );
 						parent = (JPanel)chessBoard.getComponent(location);
 						parent.add(pieces);
 					}
