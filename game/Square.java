@@ -11,15 +11,6 @@ public class Square{
     private Position position;
     private Piece piece;
 
-    /**
-     *  Create a square with a piece on it
-     * @param position
-     * @param piece
-     */
-    public Square(Position position, Piece piece){
-        this.position = position;
-        this.piece = piece;
-    }
 
     /**
      *  Create empty square without piece
@@ -50,13 +41,16 @@ public class Square{
         return position;
     }
 
-    public boolean isEmpty(){
+    public boolean piecePresent(){
         if(piece == null){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
+    public void removePiece(){
+        piece = null;
+    }
 
 
 }

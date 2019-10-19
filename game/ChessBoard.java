@@ -34,6 +34,33 @@ public class ChessBoard {
         boardSquares[0][1].setPiece(new Pawn(PieceColor.WHITE));
         boardSquares[1][1].setPiece(new Pawn(PieceColor.WHITE));
         boardSquares[2][1].setPiece(new Pawn(PieceColor.WHITE));
+        boardSquares[3][1].setPiece(new Pawn(PieceColor.WHITE));
+        boardSquares[4][1].setPiece(new Pawn(PieceColor.WHITE));
+        boardSquares[5][1].setPiece(new Pawn(PieceColor.WHITE));
+        boardSquares[6][1].setPiece(new Pawn(PieceColor.WHITE));
+        boardSquares[7][1].setPiece(new Pawn(PieceColor.WHITE));
+        /*
+        boardSquares[2][0].setPiece(new Bishop(PieceColor.WHITE));
+        boardSquares[5][0].setPiece(new Bishop(PieceColor.WHITE));
+        boardSquares[1][0].setPiece(new Knight(PieceColor.WHITE));
+        boardSquares[6][0].setPiece(new Knight(PieceColor.WHITE));
+        boardSquares[0][0].setPiece(new Rook(PieceColor.WHITE));
+        boardSquares[7][0].setPiece(new Rook(PieceColor.WHITE));
+        boardSquares[3][0].setPiece(new Queen(PieceColor.WHITE));
+        */
+
+
+
+        // Set black pieces
+        boardSquares[0][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[1][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[2][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[3][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[4][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[5][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[6][6].setPiece(new Pawn(PieceColor.BLACK));
+        boardSquares[7][6].setPiece(new Pawn(PieceColor.BLACK));
+
     }
 
 
@@ -42,7 +69,15 @@ public class ChessBoard {
     }
 
     public Square getSquare(Position position){
-        return boardSquares[position.getxPos()][position.getyPos()];
+        return boardSquares[position.getX()][position.getY()];
+    }
+
+    public void removePiece(Position pos){
+        boardSquares[pos.getX()][pos.getY()].removePiece();
+    }
+
+    public void setPiece(Position pos, Piece piece){
+        boardSquares[pos.getX()][pos.getY()].setPiece(piece);
     }
 }
 

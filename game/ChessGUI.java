@@ -1,7 +1,5 @@
 package ChessProject.game;
 
-import ChessProject.game.*;
-import ChessProject.pieces.*;
 import ChessProject.pieces.PieceColor;
 
 import java.awt.*;
@@ -11,30 +9,57 @@ import javax.swing.*;
 
 public class ChessGUI extends JFrame {
 
-    ChessBoard realBoard;
 
-    public JLayeredPane layeredPane;
-    JPanel chessBoard;
-    JLabel chessPiece;
-    int xAdjustment;
-    int yAdjustment;
-    int startX;
-    int startY;
-    int initialX;
-    int initialY;
-    JPanel panels;
-    JLabel pieces;
+    private ChessProject chessGame;
+
+    private JLayeredPane layeredPane;
+    private JPanel chessBoard;
+    private JLabel chessPiece;
+    private int xAdjustment;
+    private int yAdjustment;
+    private int startX;
+    private int startY;
+    private JPanel panels;
+    private JLabel pieces;
 
 
     private class BoardMouseAdapter extends MouseAdapter {
         @Override
-        public void mousePressed(MouseEvent e) { }
+        public void mousePressed(MouseEvent e) {
+
+            chessPiece = null;
+            Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
+            if (c instanceof JPanel)
+                return;
+
+            startX = (e.getX()/75);
+            startY = (e.getY()/75);
+            Point parentLocation = c.getParent().getLocation();
+            xAdjustment = parentLocation.x - e.getX();
+            yAdjustment = parentLocation.y - e.getY();
+            chessPiece = (JLabel)c;
+            chessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
+            chessPiece.setSize(chessPiece.getWidth(), chessPiece.getHeight());
+            layeredPane.add(chessPiece, JLayeredPane.DRAG_LAYER);
+        }
 
         @Override
-        public void mouseDragged(MouseEvent e) { }
+        public void mouseDragged(MouseEvent e) {
+            if (chessPiece == null) return;
+            chessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
+        }
 
         @Override
-        public void mouseReleased(MouseEvent e) { }
+        public void mouseReleased(MouseEvent e) {
+            if(chessPiece == null) return;
+            chessPiece.setVisible(false);
+
+            System.out.println("Starty: " + startY);
+            System.out.println("e.gety:  " + (e.getY()/75));
+
+            chessGame.canMoveTo(new Position(startX,startY), new Position((e.getX()/75),(e.getY()/75)));
+            renderBoard();
+        }
     }
 
 
@@ -59,43 +84,40 @@ public class ChessGUI extends JFrame {
         chessBoard.setPreferredSize( boardSize );
         chessBoard.setBounds(0, 0, boardSize.width, boardSize.height);
 
-        //Draw squares on the board
-        for (int i = 0; i < 64; i++) {
-            JPanel square = new JPanel( new BorderLayout() );
-            chessBoard.add( square );
+        // Start Chess engine ChessProject
+        chessGame = new ChessProject();
 
-            int row = (i / 8) % 2;
-            if (row == 0)
-                square.setBackground( i % 2 == 0 ? Color.white : Color.gray );
-            else
-                square.setBackground( i % 2 == 0 ? Color.gray : Color.white );
-        }
-
-
-        // Get real chessboard
-        realBoard = new ChessBoard();
-        renderPieces();
+        //Draw squares and pieces on gui board
+        renderBoard();
 
 
     }
 
-    private void renderPieces(){
-        Square[][] boardSquares = realBoard.getBoardSquares();
+
+    /**
+     *  Clear board, Iterate through chessBoard and draw pieces as per the Chessboard Class
+     */
+    private void renderBoard(){ ;
+        drawSquares();
+        Square[][] boardSquares = chessGame.getBoard().getBoardSquares();
         for(int x = 0; x < 8; x++){
             for(int y = 0; y < 8; y++){
                 Square square = boardSquares[x][y];
-
                 // If square is occupied set the piece on the GUI
-                if(!square.isEmpty()){
+                if(square.piecePresent()) {
                     // Convert 2D x,y to  1D for chessBoard JPanel
-                    setPiece(square,(x + 8 * y));
+                    setPiece(square, (x + 8 * y));
                 }
             }
         }
     }
 
 
-
+    /**
+     *  Draw a chesspiece on the Jpanel board based on current ChessBoard state
+     * @param square
+     * @param convert2D
+     */
     private void setPiece(Square square, Integer convert2D){
         String resource = "resource/";
         resource += (square.getPiece().getColor() == PieceColor.WHITE) ? "White" : "Black";
@@ -115,7 +137,6 @@ public class ChessGUI extends JFrame {
             case PAWN:  resource += "Pawn.png";
                 break;
         }
-
         // Set image on convert2D position
         pieces = new JLabel( new ImageIcon(resource) );
         panels = (JPanel)chessBoard.getComponent(convert2D);
@@ -123,68 +144,22 @@ public class ChessGUI extends JFrame {
 
     }
 
+    /**
+     *  Clear the JPanel board and draw new squares
+     */
+    private void drawSquares(){
+        chessBoard.removeAll();
+        chessBoard.repaint();
+        for (int i = 0; i < 64; i++) {
+            JPanel square = new JPanel( new BorderLayout() );
+            chessBoard.add( square );
 
-
-    private void initialiseBoard(){
-        // Setting up the Initial Chess board.
-
-        for(int i=8;i < 16; i++){
-            pieces = new JLabel( new ImageIcon("resource/WhitePawn.png") );
-            panels = (JPanel)chessBoard.getComponent(i);
-            panels.add(pieces);
+            int row = (i / 8) % 2;
+            if (row == 0)
+                square.setBackground( i % 2 == 0 ? Color.white : Color.gray );
+            else
+                square.setBackground( i % 2 == 0 ? Color.gray : Color.white );
         }
-        pieces = new JLabel( new ImageIcon("resource/WhiteRook.png") );
-        panels = (JPanel)chessBoard.getComponent(0);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteKnight.png") );
-        panels = (JPanel)chessBoard.getComponent(1);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteKnight.png") );
-        panels = (JPanel)chessBoard.getComponent(6);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteBishop.png") );
-        panels = (JPanel)chessBoard.getComponent(2);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteBishop.png") );
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteKing.png") );
-        panels = (JPanel)chessBoard.getComponent(3);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteQueen.png") );
-        panels = (JPanel)chessBoard.getComponent(4);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/WhiteRook.png") );
-        panels = (JPanel)chessBoard.getComponent(7);
-        panels.add(pieces);
-        for(int i=48;i < 56; i++){
-            pieces = new JLabel( new ImageIcon("resource/BlackPawn.png") );
-            panels = (JPanel)chessBoard.getComponent(i);
-            panels.add(pieces);
-        }
-        pieces = new JLabel( new ImageIcon("resource/BlackRook.png") );
-        panels = (JPanel)chessBoard.getComponent(56);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackKnight.png") );
-        panels = (JPanel)chessBoard.getComponent(57);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackKnight.png") );
-        panels = (JPanel)chessBoard.getComponent(62);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackBishop.png") );
-        panels = (JPanel)chessBoard.getComponent(58);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackBishop.png") );
-        panels = (JPanel)chessBoard.getComponent(61);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackKing.png") );
-        panels = (JPanel)chessBoard.getComponent(59);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackQueen.png") );
-        panels = (JPanel)chessBoard.getComponent(60);
-        panels.add(pieces);
-        pieces = new JLabel( new ImageIcon("resource/BlackRook.png") );
-        panels = (JPanel)chessBoard.getComponent(63);
-        panels.add(pieces);
 
     }
 

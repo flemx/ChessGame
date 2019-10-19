@@ -16,7 +16,7 @@ public class Position {
      * @param yPos
      * @param xPos
      */
-    public Position(int yPos, int xPos){
+    public Position(int xPos, int yPos){
         this.yPos = yPos;
         this.xPos = xPos;
     }
@@ -39,19 +39,19 @@ public class Position {
      *
      * Getters & Setters for coordinate variables
      */
-    public int getxPos() {
+    public int getX() {
         return xPos;
     }
 
-    public void setxPos(int xPos) {
+    public void setX(int xPos) {
         this.xPos = xPos;
     }
 
-    public int getyPos() {
+    public int getY() {
         return yPos;
     }
 
-    public void setyPos(int yPos) {
+    public void setY(int yPos) {
         this.yPos = yPos;
     }
 }
