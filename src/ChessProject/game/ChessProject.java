@@ -21,14 +21,19 @@ public class ChessProject {
         return board;
     }
 
+
     public void canMoveTo(Position from, Position to){
+        if(to.getX() > 7 || to.getX() < 0 ||
+                to.getY() > 7 || to.getY() < 0){
+            // Exit method if move is out of bounds
+            return;
+        }
+
         Square squareFrom = board.getSquare(from);
         Square squareTo = board.getSquare(to);
         Boolean canMove = false;
 
-
         System.out.println("--------------------------------------------------");
-       //System.out.println("squareFrom.piecePresent: " +  squareFrom.piecePresent());
         System.out.println("The piece that is trying to move: " +  squareFrom.getPiece().getType() + " - " + squareFrom.getPiece().getColor());
         System.out.println("Move from: x"+from.getY() + ", y"+from.getY());
         System.out.println("Move to: x"+to.getY() + ", y"+to.getY());
@@ -51,6 +56,7 @@ public class ChessProject {
         if(canMove){
             System.out.println("Move valid");
             System.out.println("--------------------------------------------------");
+
             board.setPiece(to, squareFrom.getPiece());
             board.removePiece(from);
             changePlayer();
