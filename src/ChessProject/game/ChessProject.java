@@ -2,6 +2,8 @@ package ChessProject.game;
 
 import ChessProject.pieces.*;
 
+import java.util.ArrayList;
+
 /**
  * @author dfleminks
  * The main Class that controlls most of the logic of the game
@@ -40,9 +42,11 @@ public class ChessProject {
         Boolean canMove = false;
 
         System.out.println("--------------------------------------------------");
-        System.out.println("The piece that is trying to move: " +  squareFrom.getPiece().getType() + " - " + squareFrom.getPiece().getColor());
-        System.out.println("Move from: x"+from.getY() + ", y"+from.getY());
-        System.out.println("Move to: x"+to.getY() + ", y"+to.getY());
+        System.out.println("The piece that is trying to move: " +
+                squareFrom.getPiece().getType() + " - " +
+                squareFrom.getPiece().getColor());
+        System.out.println("Move from: x"+from.getX() + ", y"+from.getY());
+        System.out.println("Move to: x"+to.getX() + ", y"+to.getY());
 
 
         if(squareFrom.getPiece().getColor() == activePlayer){
@@ -52,8 +56,12 @@ public class ChessProject {
                 case PAWN:
                     canMove = evaluatePawnMove(squareFrom,squareTo);
                     break;
+                case KNIGHT:
+                    canMove = evaluatePawnMove(squareFrom,squareTo);
+                    break;
                 default:
-                    canMove =  evaluateNormalMove(squareFrom,squareTo);
+                    canMove =  (evaluateNormalMove(squareFrom,squareTo) &&
+                                isPathClear(squareFrom,squareTo));
                     break;
             }
         }else{
@@ -81,6 +89,29 @@ public class ChessProject {
         }
 
     }
+
+
+    /**
+     *  Checks if the path is clear the piece wants to move
+     * @param squareFrom
+     * @param squareTo
+     * @return
+     */
+    private boolean isPathClear(Square squareFrom,Square squareTo){
+        boolean isClear = true;
+        ArrayList<Position> positions =  squareFrom.getPiece().returnPath(squareFrom.getPosition(),squareTo.getPosition());
+        System.out.println("Positions iin path are: ");
+        for(Position pos : positions){
+            if(board.getSquare(pos).piecePresent()){
+                isClear = false;
+                System.out.println(pos.getX() + " - " + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));
+            }else{
+                System.out.println(pos.getX() + " - " + pos.getY());
+            }
+        }
+        return isClear;
+    }
+
 
     /**
      *  Check if the pawn is allowed to promote if reached end of deck upon valid move
