@@ -2,6 +2,8 @@ package ChessProject.pieces;
 
 import ChessProject.game.Position;
 
+import java.util.ArrayList;
+
 public class Queen extends Piece{
 
     public Queen(PieceColor pieceColor){
@@ -9,10 +11,9 @@ public class Queen extends Piece{
     }
 
     @Override
-    public Position[] returnPath(Position fromPos, Position toPos) {
-        return new Position[0];
+    public ArrayList<Position> returnPath(Position fromPos, Position toPos) {
+        return new ArrayList<Position>();
     }
-
     @Override
     public boolean validMove(Position fromPos, Position toPos) {
         Integer fromX = fromPos.getX();

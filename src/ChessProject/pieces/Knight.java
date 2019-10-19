@@ -1,6 +1,7 @@
 package ChessProject.pieces;
 
 import ChessProject.game.Position;
+import java.util.ArrayList;
 
 public class Knight extends Piece{
 
@@ -9,8 +10,8 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Position[] returnPath(Position fromPos, Position toPos) {
-        return new Position[0];
+    public  ArrayList<Position> returnPath(Position fromPos, Position toPos) {
+        return new ArrayList<Position>();
     }
 
     @Override
@@ -20,7 +21,12 @@ public class Knight extends Piece{
         Integer fromY = fromPos.getY();
         Integer toY = toPos.getY();
 
-        // To be added
+        if(Math.abs(fromX - toX) == 2 && Math.abs(fromY - toY) == 1){
+            return true;
+        }
+        if(Math.abs(fromX - toX) == 1 && Math.abs(fromY - toY) == 2){
+            return true;
+        }
         return false;
 
     }

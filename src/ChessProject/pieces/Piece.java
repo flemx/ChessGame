@@ -2,6 +2,8 @@ package ChessProject.pieces;
 
 import ChessProject.game.Position;
 
+import java.util.ArrayList;
+
 
 /**
  *  Piece Super Class
@@ -43,7 +45,7 @@ public abstract class Piece {
      * @param toPos
      * @return
      */
-    public abstract Position[] returnPath(Position fromPos, Position toPos);
+    public abstract ArrayList<Position> returnPath(Position fromPos, Position toPos);
 
     /**
      *  Evaluate if the player's move is a move the piece can make
