@@ -63,6 +63,14 @@ public class ChessGUI extends JFrame {
             chessPiece.setVisible(false);
 
             chessGame.canMoveTo(new Position(startX,startY), new Position((e.getX()/75),(e.getY()/75)));
+            if(chessGame.isGameOver()){
+                String winner = chessGame.getActivePlayer().toString();
+                String text = winner + " wins the game!";
+                String title = "GAME OVER";
+                int optionType = JOptionPane.DEFAULT_OPTION;
+                int result = JOptionPane.showConfirmDialog(null, text, title, optionType);
+                chessGame.getBoard();
+            }
             renderBoard();
         }
     }

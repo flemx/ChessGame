@@ -106,12 +106,16 @@ public class ChessProject {
     private boolean validKingMove(Square squareFrom,Square squareTo){
         // Add method here later to loop through all the opposites attack pieces (ADD IN PART 2 OF ASSIGNMENT)
 
+        return true;
+    }
+
+    private boolean isCheckMate(Square squareFrom){
         //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
         if(squareFrom.getPiece().getType() == PieceType.KING){
             gameOver = true;
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 
@@ -166,8 +170,12 @@ public class ChessProject {
         if(squareFrom.piecePresent() &&
                 squareFrom.getPiece().validMove(squareFrom.getPosition(),squareTo.getPosition())){
             if(squareTo.piecePresent() && (squareTo.getPiece().getColor() !=  activePlayer)){
-                System.out.println("Player " + activePlayer.toString() + " takes " + squareFrom.getPiece().getType().toString() + "!");
-                return true;
+                System.out.println("Player " + activePlayer.toString() + " takes " + squareTo.getPiece().getType().toString() + "!");
+
+                //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
+                return isCheckMate(squareTo) ? false : true;
+
+
             }
             if(!squareTo.piecePresent()){
                 return true;
@@ -229,6 +237,10 @@ public class ChessProject {
      */
     public PieceColor getActivePlayer() {
         return activePlayer;
+    }
+
+    public void resetGame(){
+        board = new ChessBoard();
     }
 }
 
