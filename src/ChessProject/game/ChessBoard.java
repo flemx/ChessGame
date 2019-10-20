@@ -70,7 +70,6 @@ public class ChessBoard {
      * Resets the board to its starting state
      */
     public void resetBoard(){
-        boardSquares  = new Square[8][8];
         initializeSquares();
         initializePieces();
     }

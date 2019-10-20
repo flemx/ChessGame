@@ -64,12 +64,11 @@ public class ChessGUI extends JFrame {
 
             chessGame.canMoveTo(new Position(startX,startY), new Position((e.getX()/75),(e.getY()/75)));
             if(chessGame.isGameOver()){
-                String winner = chessGame.getActivePlayer().toString();
-                String text = winner + " wins the game!";
-                String title = "GAME OVER";
+                // If game is won, close the came
+                String text = chessGame.getActivePlayer().toString() + " wins the game!";
                 int optionType = JOptionPane.DEFAULT_OPTION;
-                int result = JOptionPane.showConfirmDialog(null, text, title, optionType);
-                chessGame.getBoard();
+                JOptionPane.showConfirmDialog(ChessGUI.this, text, "Game Over", optionType);
+                dispose();
             }
             renderBoard();
         }
@@ -80,9 +79,19 @@ public class ChessGUI extends JFrame {
      *   Draws the board in
      */
     public ChessGUI(){
+
+        setupGUI();
+
+        // Start Chess engine ChessProject
+        chessGame = new ChessProject();
+        //Draw squares and pieces on gui board
+        renderBoard();
+
+    }
+
+    private void setupGUI(){
         // Use BoardMouseAdapter class to capture mouse events
         BoardMouseAdapter mouseAdapter = new BoardMouseAdapter();
-
         Dimension boardSize = new Dimension(600, 600);
 
         //  Use a Layered Pane for this application
@@ -98,13 +107,6 @@ public class ChessGUI extends JFrame {
         chessBoard.setLayout( new GridLayout(8, 8) );
         chessBoard.setPreferredSize( boardSize );
         chessBoard.setBounds(0, 0, boardSize.width, boardSize.height);
-
-        // Start Chess engine ChessProject
-        chessGame = new ChessProject();
-
-        //Draw squares and pieces on gui board
-        renderBoard();
-
 
     }
 
@@ -136,8 +138,8 @@ public class ChessGUI extends JFrame {
     private void setPiece(Square square, Integer convert2D){
 
         /* Try to add "resource/ to variable if piece images don't render */
-        String resource = "resource/";
-        //String resource = "";
+        //String resource = "resource/";
+        String resource = "";
         resource += (square.getPiece().getColor() == PieceColor.WHITE) ? "White" : "Black";
 
         switch (square.getPiece().getType())

@@ -240,7 +240,8 @@ public class ChessProject {
     }
 
     public void resetGame(){
-        board = new ChessBoard();
+        activePlayer = PieceColor.WHITE;
+        board.resetBoard();
     }
 }
 
