@@ -16,7 +16,10 @@ public class ChessProject {
 
     private PieceColor activePlayer;
 
+    private boolean gameOver;
+
     public ChessProject(){
+        gameOver = false;
         activePlayer = PieceColor.WHITE;
         board = new ChessBoard();
     }
@@ -57,7 +60,11 @@ public class ChessProject {
                     canMove = evaluatePawnMove(squareFrom,squareTo);
                     break;
                 case KNIGHT:
-                    canMove = evaluatePawnMove(squareFrom,squareTo);
+                    canMove = (evaluateNormalMove(squareFrom,squareTo));
+                    break;
+                case KING:
+                    canMove = (evaluateNormalMove(squareFrom,squareTo) &&
+                                validKingMove(squareFrom,squareTo));
                     break;
                 default:
                     canMove =  (evaluateNormalMove(squareFrom,squareTo) &&
@@ -88,6 +95,23 @@ public class ChessProject {
             System.out.println("--------------------------------------------------");
         }
 
+    }
+
+    /**
+     *  Check if King move is valid by validating no other pieces can attack after move
+     * @param squareFrom
+     * @param squareTo
+     * @return
+     */
+    private boolean validKingMove(Square squareFrom,Square squareTo){
+        // Add method here later to loop through all the opposites attack pieces (ADD IN PART 2 OF ASSIGNMENT)
+
+        //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
+        if(squareFrom.getPiece().getType() == PieceType.KING){
+            gameOver = true;
+            return false;
+        }
+        return true;
     }
 
 
@@ -189,6 +213,22 @@ public class ChessProject {
         }else{
             activePlayer = PieceColor.BLACK;
         }
+    }
+
+    /**
+     *  Checks if game is won (Checkmate, King captured or draw)
+     * @return
+     */
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    /**
+     *  Return the active player
+     * @return
+     */
+    public PieceColor getActivePlayer() {
+        return activePlayer;
     }
 }
 

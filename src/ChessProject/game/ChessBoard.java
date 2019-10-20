@@ -32,6 +32,9 @@ public class ChessBoard {
     }
 
 
+    /**
+     *  Write all the pieces n a 2D array of squares
+     */
     private void initializePieces() {
 
         // Set white pieces
@@ -63,19 +66,44 @@ public class ChessBoard {
 
     }
 
+    /**
+     * Resets the board to its starting state
+     */
+    public void resetBoard(){
+        initializePieces();
+    }
 
+
+    /**
+     *  Return the boardsquares
+     * @return
+     */
     public Square[][] getBoardSquares() {
         return boardSquares;
     }
 
+    /**
+     *  Return a square from a given position
+     * @param position
+     * @return
+     */
     public Square getSquare(Position position){
         return boardSquares[position.getX()][position.getY()];
     }
 
+    /**
+     *  Removes a piece from a square by a given position
+     * @param pos
+     */
     public void removePiece(Position pos){
         boardSquares[pos.getX()][pos.getY()].removePiece();
     }
 
+    /**
+     *  Sets a given piece on a square defined by position
+     * @param pos
+     * @param piece
+     */
     public void setPiece(Position pos, Piece piece){
         boardSquares[pos.getX()][pos.getY()].setPiece(piece);
     }

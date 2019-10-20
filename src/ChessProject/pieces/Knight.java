@@ -3,8 +3,15 @@ package ChessProject.pieces;
 import ChessProject.game.Position;
 import java.util.ArrayList;
 
+/**
+ * @author dfleminks
+ */
 public class Knight extends Piece{
 
+    /**
+     * Creates a Knight piece
+     * @param pieceColor
+     */
     public Knight(PieceColor pieceColor){
         super(PieceType.KNIGHT, pieceColor);
     }

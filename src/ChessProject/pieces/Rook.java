@@ -4,8 +4,15 @@ import ChessProject.game.Position;
 
 import java.util.ArrayList;
 
+/**
+ * @author dfleminks
+ */
 public class Rook extends Piece {
 
+    /**
+     *  Creates a Rook Piece
+     * @param pieceColor
+     */
     public Rook(PieceColor pieceColor){
         super(PieceType.ROOK, pieceColor);
     }
