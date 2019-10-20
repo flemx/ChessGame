@@ -21,7 +21,10 @@ public class Queen extends Piece{
         Integer fromY = fromPos.getY();
         Integer toY = toPos.getY();
 
-        // To be added
+        if(Math.abs(fromX - toX) == Math.abs(fromY - toY) ||
+                fromX == toX || fromY == toY) {
+            return true;
+        }
         return false;
 
     }
