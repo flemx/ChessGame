@@ -100,7 +100,7 @@ public class ChessProject {
     private boolean isPathClear(Square squareFrom,Square squareTo){
         boolean isClear = true;
         ArrayList<Position> positions =  squareFrom.getPiece().returnPath(squareFrom.getPosition(),squareTo.getPosition());
-        System.out.println("Positions iin path are: ");
+        System.out.println("Positions in path are: ");
         for(Position pos : positions){
             if(board.getSquare(pos).piecePresent()){
                 isClear = false;
@@ -114,7 +114,7 @@ public class ChessProject {
 
 
     /**
-     *  Check if the pawn is allowed to promote if reached end of deck upon valid move
+     *  Check if the pawn is allowed to promote if reached end of deck upon valid move.
      * @param to
      * @param squareFrom
      */
