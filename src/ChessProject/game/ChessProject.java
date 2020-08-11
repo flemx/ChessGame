@@ -196,8 +196,8 @@ public class ChessProject {
      */
     private boolean evaluatePawnMove(Square squareFrom, Square squareTo){
 
-        if(squareTo.piecePresent() & Math.abs(squareTo.getPosition().getY() - (squareFrom.getPosition().getY())) == 1 &&
-                Math.abs(squareFrom.getPosition().getX() - squareTo.getPosition().getX()) == 1 ){
+        //Check for attack move
+        if(squareTo.piecePresent() &  squareFrom.getPiece().validAttackMove(squareFrom.getPosition(),squareTo.getPosition()) ){
             System.out.println("Player " + activePlayer.toString() + " takes " + squareFrom.getPiece().getType().toString() + "!");
             return true;
         }

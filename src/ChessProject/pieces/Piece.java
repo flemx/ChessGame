@@ -55,5 +55,13 @@ public abstract class Piece {
      */
     public abstract boolean validMove(Position fromPos, Position toPos);
 
+    /**
+     *  Evaluate if the player's attack move is a move the piece can make
+     * @param fromPos
+     * @param toPos
+     * @return
+     */
+    public abstract boolean validAttackMove(Position fromPos, Position toPos);
+
 
 }
