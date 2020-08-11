@@ -49,19 +49,7 @@ public class Pawn extends Piece{
 
     }
 
-    @Override
-    public boolean validAttackMove(Position fromPos, Position toPos){
-        Integer fromX = fromPos.getX();
-        Integer toX = toPos.getX();
-        Integer fromY = fromPos.getY();
-        Integer toY = toPos.getY();
 
-        if(Math.abs(toY - fromY) == 1 && Math.abs(fromX - toX) == 1 ){
-            return true;
-        }
-        return false;
-
-    }
 
     /**
      * Returns boolean based on valid move used by validMove method
