@@ -57,7 +57,8 @@ public class ChessProject {
             switch (squareFrom.getPiece().getType())
             {
                 case PAWN:
-                    canMove = evaluatePawnMove(squareFrom,squareTo);
+                    canMove = isPathClear(squareFrom,squareTo) &&
+                                evaluatePawnMove(squareFrom,squareTo);
                     break;
                 case KNIGHT:
                     canMove = (evaluateNormalMove(squareFrom,squareTo));
@@ -67,8 +68,8 @@ public class ChessProject {
                                 validKingMove(squareFrom,squareTo));
                     break;
                 default:
-                    canMove =  (evaluateNormalMove(squareFrom,squareTo) &&
-                                isPathClear(squareFrom,squareTo));
+                    canMove =  (isPathClear(squareFrom,squareTo) &&
+                                 evaluateNormalMove(squareFrom,squareTo));
                     break;
             }
         }else{
@@ -120,7 +121,7 @@ public class ChessProject {
 
 
     /**
-     *  Checks if the path is clear the piece wants to move
+     *  Checks if the path is clear the piece wants to move.
      * @param squareFrom
      * @param squareTo
      * @return
@@ -132,9 +133,9 @@ public class ChessProject {
         for(Position pos : positions){
             if(board.getSquare(pos).piecePresent()){
                 isClear = false;
-                System.out.println(pos.getX() + " - " + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));
+                System.out.println("postion: " + pos.getX() + " - " + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));
             }else{
-                System.out.println(pos.getX() + " - " + pos.getY());
+                System.out.println("postion: " + pos.getX() + " - " + pos.getY());
             }
         }
         return isClear;

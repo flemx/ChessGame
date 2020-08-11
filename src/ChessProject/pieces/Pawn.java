@@ -18,9 +18,15 @@ public class Pawn extends Piece{
         super(PieceType.PAWN, pieceColor);
     }
 
+
     @Override
     public ArrayList<Position> returnPath(Position fromPos, Position toPos) {
-        return new ArrayList<Position>();
+        ArrayList<Position> positions = new ArrayList<Position>();
+        // Check is move is same as Rook to return path
+        if(fromPos.getX() == toPos.getX() & fromPos.getY() != toPos.getY()){
+            positions = new Rook(this.getColor()).returnPath(fromPos, toPos);
+        }
+        return positions;
     }
 
     @Override
