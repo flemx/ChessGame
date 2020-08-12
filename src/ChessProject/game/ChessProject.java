@@ -55,8 +55,7 @@ public class ChessProject {
         System.out.println("The piece that is trying to move: " +
                 move.getStart().getPiece().getType() + " - " +
                 move.getStart().getPiece().getColor());
-        System.out.println("Move from: x"+start.getX() + ", y"+start.getY());
-        System.out.println("Move to: x"+landing.getX() + ", y"+landing.getY());
+        System.out.println("Move from: x"+start.getX() + ", y"+start.getY() + " - to: x"+landing.getX() + ", y"+landing.getY());
 
 
         if(move.getStart().getPiece().getColor() == activePlayer){
@@ -107,8 +106,7 @@ public class ChessProject {
                 canMove = (evaluateNormalMove(squareFrom,squareTo));
                 break;
             case KING:
-                canMove = (evaluateNormalMove(squareFrom,squareTo) &&
-                        validKingMove(squareFrom,squareTo));
+                canMove = (evaluateNormalMove(squareFrom,squareTo));
                 break;
             default:
                 canMove =  (isPathClear(squareFrom,squareTo) &&
@@ -124,37 +122,40 @@ public class ChessProject {
      * @return
      */
     private ArrayList<Move> getAllValidMoves(Position current){
-        ArrayList<Move> moves = new ArrayList<Move>();
-        Square currentPosition =  board.getSquare(current);
+        ArrayList<Move> validMoves = new ArrayList<Move>();
+
+        System.out.println("Running algorithm to validate all valid moves.....");
+        //Disable comments temporarily to prevent spamming
+        commentsEnabled = false;
 
         Square[][] allSquares = board.getBoardSquares();
-        //Loop through all squares to validate all positions
+        //Loop through all squares to validate if all valid moves from current position
         for(Integer i =0; i < 8; i++){
             for(Integer j =0; j < 8; j++){
-
+                if(evaluateMove(board.getSquare(current), allSquares[i][j])){
+                    validMoves.add(new Move(board.getSquare(current),allSquares[i][j]));
+                }
             }
         }
 
-        return moves;
+        commentsEnabled = true;
+        return validMoves;
     }
 
 
 
-//    private ArrayList<Position> getValidAttackMoves(ArrayList<Position> ){
-//
-//    }
+    private ArrayList<Move> getValidAttackMoves(ArrayList<Move> validMoves){
+        ArrayList<Move> validAttackMoves = new ArrayList<Move>();
 
-    /**
-     *  Check if King move is valid by validating no other pieces can attack after move
-     * @param squareFrom
-     * @param squareTo
-     * @return
-     */
-    private boolean validKingMove(Square squareFrom,Square squareTo){
-        // Add method here later to loop through all the opposites attack pieces (ADD IN PART 2 OF ASSIGNMENT)
+        System.out.println("Running algorithm to validate all valid attacks moves.....");
+        //Disable comments temporarily to prevent spamming
+        commentsEnabled = false;
 
-        return true;
+
+
+        return validAttackMoves;
     }
+
 
     /**
      * Validates if move makes
@@ -207,14 +208,14 @@ public class ChessProject {
     private boolean isPathClear(Square squareFrom,Square squareTo){
         boolean isClear = true;
         ArrayList<Position> positions =  squareFrom.getPiece().returnPath(squareFrom.getPosition(),squareTo.getPosition());
-        if(commentsEnabled){System.out.println("Positions in path are: ");}
+        if(commentsEnabled){System.out.print("Pieces in path are: ");}
 
         for(Position pos : positions){
             if(board.getSquare(pos).piecePresent()){
                 isClear = false;
-                if(commentsEnabled){System.out.println("postion: " + pos.getX() + " - " + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));}
+                if(commentsEnabled){System.out.println("postion: " + "x" + pos.getX() + " - " +  "y" + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));}
             }else{
-                if(commentsEnabled){ System.out.println("postion: " + pos.getX() + " - " + pos.getY());}
+                if(commentsEnabled){ System.out.println("No pieces in path");}
             }
         }
         return isClear;
@@ -276,7 +277,8 @@ public class ChessProject {
     private boolean evaluatePawnMove(Square squareFrom, Square squareTo){
 
         //Check for attack move
-        if(squareTo.piecePresent() & Math.abs(squareTo.getPosition().getY() - (squareFrom.getPosition().getY())) == 1 &&
+        if(squareTo.piecePresent() &&  (squareTo.getPiece().getColor() !=  activePlayer) &&
+                Math.abs(squareTo.getPosition().getY() - (squareFrom.getPosition().getY())) == 1 &&
                 Math.abs(squareFrom.getPosition().getX() - squareTo.getPosition().getX()) == 1 ){
             if(commentsEnabled){System.out.println("Player " + activePlayer.toString() + " takes " + squareFrom.getPiece().getType().toString() + "!");}
             return true;
