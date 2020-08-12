@@ -62,7 +62,7 @@ public class ChessGUI extends JFrame {
             if(chessPiece == null) return;
             chessPiece.setVisible(false);
 
-            chessGame.canMoveTo(new Position(startX,startY), new Position((e.getX()/75),(e.getY()/75)));
+            chessGame.movePiece(new Position(startX,startY), new Position((e.getX()/75),(e.getY()/75)));
             if(chessGame.isGameOver()){
                 // If game is won, close the came
                 String text = chessGame.getActivePlayer().toString() + " wins the game!";
