@@ -60,7 +60,7 @@ public class ChessProject {
 
         if(move.getStart().getPiece().getColor() == activePlayer){
             // Check if piece can move from current position
-            canMove = evaluateMove(move.getStart(), move.getLanding());
+            canMove = evaluateMove(move.getStart(), move.getLanding(),activePlayer);
         }else{
             System.out.println("It is the other players turn");
         }
@@ -93,24 +93,24 @@ public class ChessProject {
      * @param squareTo
      * @return
      */
-    private boolean evaluateMove(Square squareFrom, Square squareTo){
+    private boolean evaluateMove(Square squareFrom, Square squareTo, PieceColor currentPlayer){
         boolean canMove;
         // Choose move evaluation based on piece type
         switch (squareFrom.getPiece().getType())
         {
             case PAWN:
                 canMove = isPathClear(squareFrom,squareTo) &&
-                        evaluatePawnMove(squareFrom,squareTo);
+                        evaluatePawnMove(squareFrom,squareTo,currentPlayer);
                 break;
             case KNIGHT:
-                canMove = (evaluateNormalMove(squareFrom,squareTo));
+                canMove = (evaluateNormalMove(squareFrom,squareTo,currentPlayer));
                 break;
             case KING:
-                canMove = (evaluateNormalMove(squareFrom,squareTo));
+                canMove = (evaluateNormalMove(squareFrom,squareTo,currentPlayer));
                 break;
             default:
                 canMove =  (isPathClear(squareFrom,squareTo) &&
-                        evaluateNormalMove(squareFrom,squareTo));
+                        evaluateNormalMove(squareFrom,squareTo,currentPlayer));
                 break;
         }
         return canMove;
@@ -118,22 +118,22 @@ public class ChessProject {
 
 
     /**
-     *  Return all valid moves on the board from current position
+     *  Return all valid moves on the given board from current position
      * @return
      */
-    private ArrayList<Move> getAllValidMoves(Position current){
+    private ArrayList<Move> getAllValidMoves(Position current, ChessBoard boardCopy, PieceColor currentPlayer){
         ArrayList<Move> validMoves = new ArrayList<Move>();
 
         System.out.println("Running algorithm to validate all valid moves.....");
         //Disable comments temporarily to prevent spamming
         commentsEnabled = false;
 
-        Square[][] allSquares = board.getBoardSquares();
+        Square[][] allSquares = boardCopy.getBoardSquares();
         //Loop through all squares to validate if all valid moves from current position
         for(Integer i =0; i < 8; i++){
             for(Integer j =0; j < 8; j++){
-                if(evaluateMove(board.getSquare(current), allSquares[i][j])){
-                    validMoves.add(new Move(board.getSquare(current),allSquares[i][j]));
+                if(evaluateMove(boardCopy.getSquare(current), allSquares[i][j],currentPlayer)){
+                    validMoves.add(new Move(boardCopy.getSquare(current),allSquares[i][j]));
                 }
             }
         }
@@ -168,33 +168,52 @@ public class ChessProject {
 
 
     /**
-     * Validates if move makes
+     * Validates if king is under attack in possible attack moves
      * @return
      */
-    private boolean evaluateCheck(){
-        //ArrayList<Square> squares = new ArrayList<Square>();
+    private boolean checkKingAttack(ArrayList<Move> validAttackMoves){
+        for(Move checkMove : validAttackMoves){
+            if(checkMove.getLanding().getPiece().getType() == PieceType.KING){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     *  Check if a given board is under check with the given color
+     * @param color
+     * @param boardCopy
+     * @return
+     */
+    private boolean isCheck(PieceColor color, ChessBoard boardCopy){
 
         return false;
     }
 
+
+
     /**
-     * Return all squares from particular color
+     * Return all squares from given color and  board
+     * @param color
+     * @param boardCopy
      * @return
      */
-    private ArrayList<Square> getAllofColor(PieceColor color){
-        ArrayList<Square> singeColor = new ArrayList<Square>();
-        Square[][] allSquares = board.getBoardSquares();
-        //Loop through all squares and check if piece is present and if it is the give color
+    private ArrayList<Square> getAllofColor(PieceColor color, ChessBoard boardCopy){
+        ArrayList<Square> singleColor = new ArrayList<Square>();
+        Square[][] allSquares = boardCopy.getBoardSquares();
+        //Loop through all squares and check if piece is present of the given color
         for(Integer i =0; i < 8; i++){
             for(Integer j =0; j < 8; j++){
                 if(allSquares[i][j].piecePresent() & allSquares[i][j].getPiece().getColor() == color){
                     //add square to list
-                    singeColor.add(allSquares[i][j]);
+                    singleColor.add(allSquares[i][j]);
                 }
             }
         }
 
-        return singeColor;
+        return singleColor;
     }
 
 
@@ -220,14 +239,16 @@ public class ChessProject {
         ArrayList<Position> positions =  squareFrom.getPiece().returnPath(squareFrom.getPosition(),squareTo.getPosition());
         if(commentsEnabled){System.out.print("Pieces in path are: ");}
 
-        for(Position pos : positions){
-            if(board.getSquare(pos).piecePresent()){
+        for(Position pos : positions) {
+            if (board.getSquare(pos).piecePresent()) {
                 isClear = false;
-                if(commentsEnabled){System.out.println("postion: " + "x" + pos.getX() + " - " +  "y" + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));}
-            }else{
-                if(commentsEnabled){ System.out.println("No pieces in path");}
+                if (commentsEnabled) {
+                    System.out.println("postion: " + "x" + pos.getX() + " - " + "y" + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));
+                }
+                return isClear;
             }
         }
+        if (commentsEnabled) {System.out.println("No pieces in path");}
         return isClear;
     }
 
@@ -257,14 +278,12 @@ public class ChessProject {
      * @param squareTo
      * @return
      */
-    private boolean evaluateNormalMove(Square squareFrom, Square squareTo){
+    private boolean evaluateNormalMove(Square squareFrom, Square squareTo, PieceColor currentPlayer){
         if(squareFrom.piecePresent() &&
                 squareFrom.getPiece().validMove(squareFrom.getPosition(),squareTo.getPosition())){
-            if(squareTo.piecePresent() && (squareTo.getPiece().getColor() !=  activePlayer)){
-                if(commentsEnabled){System.out.println("Player " + activePlayer.toString() + " takes " + squareTo.getPiece().getType().toString() + "!");}
-
-
-
+            if(squareTo.piecePresent() && (squareTo.getPiece().getColor() !=  currentPlayer)){
+                if(commentsEnabled){System.out.println("Player " + currentPlayer.toString() + " takes " + squareTo.getPiece().getType().toString() + "!");}
+                return true;
             }
             if(!squareTo.piecePresent()){
                 return true;
@@ -282,13 +301,13 @@ public class ChessProject {
      * @param squareTo
      * @return
      */
-    private boolean evaluatePawnMove(Square squareFrom, Square squareTo){
+    private boolean evaluatePawnMove(Square squareFrom, Square squareTo, PieceColor currentPlayer){
 
         //Check for attack move
-        if(squareTo.piecePresent() &&  (squareTo.getPiece().getColor() !=  activePlayer) &&
+        if(squareTo.piecePresent() &&  (squareTo.getPiece().getColor() !=  currentPlayer) &&
                 Math.abs(squareTo.getPosition().getY() - (squareFrom.getPosition().getY())) == 1 &&
                 Math.abs(squareFrom.getPosition().getX() - squareTo.getPosition().getX()) == 1 ){
-            if(commentsEnabled){System.out.println("Player " + activePlayer.toString() + " takes " + squareFrom.getPiece().getType().toString() + "!");}
+            if(commentsEnabled){System.out.println("Player " + currentPlayer.toString() + " takes " + squareFrom.getPiece().getType().toString() + "!");}
             return true;
         }
 
