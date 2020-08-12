@@ -143,7 +143,11 @@ public class ChessProject {
     }
 
 
-
+    /**
+     * Will return all possible attack moves from a list of moves
+     * @param validMoves
+     * @return
+     */
     private ArrayList<Move> getValidAttackMoves(ArrayList<Move> validMoves){
         ArrayList<Move> validAttackMoves = new ArrayList<Move>();
 
@@ -151,8 +155,14 @@ public class ChessProject {
         //Disable comments temporarily to prevent spamming
         commentsEnabled = false;
 
+        //Check all landing squares of the moves to see if there is a piece to catch
+        for(Move checkMove : validMoves){
+            if(checkMove.getLanding().piecePresent()){
+                validAttackMoves.add(checkMove);
+            }
+        }
 
-
+        commentsEnabled = true;
         return validAttackMoves;
     }
 
@@ -253,8 +263,6 @@ public class ChessProject {
             if(squareTo.piecePresent() && (squareTo.getPiece().getColor() !=  activePlayer)){
                 if(commentsEnabled){System.out.println("Player " + activePlayer.toString() + " takes " + squareTo.getPiece().getType().toString() + "!");}
 
-                //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
-                return isCheckMate(squareTo) ? false : true;
 
 
             }
