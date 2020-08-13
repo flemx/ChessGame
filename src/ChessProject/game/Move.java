@@ -8,20 +8,20 @@ package ChessProject.game;
 
 public class Move {
 
-    private Square start;
-    private Square landing;
+    private Position start;
+    private Position landing;
 
 
-    public Move(Square start, Square landing) {
+    public Move(Position start, Position landing) {
         this.start = start;
         this.landing = landing;
     }
 
-    public Square getStart() {
+    public Position getStart() {
         return start;
     }
 
-    public Square getLanding() {
+    public Position getLanding() {
         return landing;
     }
 }

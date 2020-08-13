@@ -37,46 +37,70 @@ public class ChessProject {
 
 
     /**
-     *  Method that evaluates a move and moves the piece if valid
+     *  Method that evaluates a move and moves the piece if valid, used by player
      * @param start
      * @param landing
      */
-    public void movePiece(Position start, Position landing){
-        if(landing.getX() > 7 || landing.getX() < 0 ||
-                landing.getY() > 7 || landing.getY() < 0){
-            // Exit method if move is out of bounds
-            return;
-        }
+    public void playerMovePiece(Position start, Position landing){
         // Create move
-        Move move = new Move(board.getSquare(start), board.getSquare(landing));
-        Boolean canMove = false;
+        Move move = new Move(board.getSquare(start).getPosition(), board.getSquare(landing).getPosition());
 
-        System.out.println("--------------------------------------------------");
-        System.out.println("The piece that is trying to move: " +
-                move.getStart().getPiece().getType() + " - " +
-                move.getStart().getPiece().getColor());
-        System.out.println("Move from: x"+start.getX() + ", y"+start.getY() + " - to: x"+landing.getX() + ", y"+landing.getY());
-
-
-        if(move.getStart().getPiece().getColor() == activePlayer){
-            // Check if piece can move from current position
-            canMove = evaluateMove(move.getStart(), move.getLanding(),activePlayer);
+        if(board.getSquare(move.getStart()).getPiece().getColor() == activePlayer){
+            movePiece(move,activePlayer);
         }else{
             System.out.println("It is the other players turn");
         }
+    }
 
+    /**
+     *  Move a piece on the main board, used by both player and AI agent
+     * @param move
+     */
+    private void movePiece(Move move, PieceColor player){
+        if(move.getLanding().getX() > 7 || move.getLanding().getX() < 0 ||
+                move.getLanding().getY() > 7 || move.getLanding().getY() < 0){
+            // Exit method if move is out of bounds
+            return;
+        }
+
+        Square squareFrom = board.getSquare(move.getStart());
+        Square squareTo = board.getSquare(move.getLanding());
+
+        Boolean canMove = false;
+
+
+        System.out.println("--------------------------------------------------");
+        System.out.println("The piece that is trying to move: " +
+                squareFrom.getPiece().getType() + " - " +
+                squareFrom.getPiece().getColor());
+        System.out.println("Move from: x"+squareFrom.getPosition().getX() + ", y"+squareFrom.getPosition().getY() +
+                " - to: x"+squareTo.getPosition().getX() + ", y"+squareTo.getPosition().getY());
+
+
+        //Return simulated move and use to verify if move makes player check
+//        System.out.println("Check piece before: " + squareFrom.piecePresent());
+        System.out.println("Running simulation to verify if move makes player check...");
+        ChessBoard SimulatedBoardMove = simulateMove(move, new ChessBoard(board), player);
+        if(isCheck(player, SimulatedBoardMove)){
+            canMove = false;
+        }else{
+            System.out.println("No check found in simulations, continue the move...");
+//            System.out.println("Check piece after: " + squareFrom.piecePresent());
+            // Check if piece can move from current position
+            canMove = evaluateMove(squareFrom, squareTo,player,board);
+        }
 
         if(canMove){
             System.out.println("Move valid");
 
             // Set piece and check for pawn promotion
-            if(move.getStart().getPiece().getType() == PieceType.PAWN){
-                promotePawn(landing, move.getStart());
+            if(squareFrom.getPiece().getType() == PieceType.PAWN){
+                promotePawn(squareTo.getPosition(), squareFrom, board);
             }else{
-                board.setPiece(landing, move.getStart().getPiece());
+                board.setPiece(squareTo.getPosition(), squareFrom.getPiece());
             }
 
-            board.removePiece(start);
+            board.removePiece(squareFrom.getPosition());
             changePlayer();
             System.out.println("--------------------------------------------------");
         }
@@ -84,7 +108,34 @@ public class ChessProject {
             System.out.println("Unvalid move");
             System.out.println("--------------------------------------------------");
         }
+    }
 
+
+    /**
+     * Set a simulated move to use for calculations for check and the AI agent
+     * @param move
+     * @param boardCopy
+     * @param player
+     * @return
+     */
+    private ChessBoard simulateMove(Move move, ChessBoard boardCopy, PieceColor player){
+        commentsEnabled = false;
+        Square squareFrom = boardCopy.getSquare(move.getStart());
+        Square squareTo = boardCopy.getSquare(move.getLanding());
+
+        ChessBoard newBoard = new ChessBoard(boardCopy);
+        if(evaluateMove(squareFrom, squareTo,player,boardCopy)){
+            // Set piece and check for pawn promotion
+            if(squareFrom.getPiece().getType() == PieceType.PAWN){
+                promotePawn(squareTo.getPosition(), squareFrom,boardCopy);
+            }else{
+                newBoard.setPiece(squareTo.getPosition(),squareFrom.getPiece());
+            }
+
+            newBoard.removePiece(squareFrom.getPosition());
+        }
+        commentsEnabled = true;
+        return newBoard;
     }
 
     /**
@@ -93,13 +144,15 @@ public class ChessProject {
      * @param squareTo
      * @return
      */
-    private boolean evaluateMove(Square squareFrom, Square squareTo, PieceColor currentPlayer){
+    private boolean evaluateMove(Square squareFrom, Square squareTo, PieceColor currentPlayer, ChessBoard  boardCopy){
         boolean canMove;
+//        System.out.println("evaluateMove Piece: x" + squareFrom.getPosition().getX() + ", y" + squareFrom.getPosition().getY());
+//        System.out.println("Piece present? " + squareFrom.piecePresent());
         // Choose move evaluation based on piece type
         switch (squareFrom.getPiece().getType())
         {
             case PAWN:
-                canMove = isPathClear(squareFrom,squareTo) &&
+                canMove = isPathClear(squareFrom,squareTo,boardCopy) &&
                         evaluatePawnMove(squareFrom,squareTo,currentPlayer);
                 break;
             case KNIGHT:
@@ -109,7 +162,7 @@ public class ChessProject {
                 canMove = (evaluateNormalMove(squareFrom,squareTo,currentPlayer));
                 break;
             default:
-                canMove =  (isPathClear(squareFrom,squareTo) &&
+                canMove =  (isPathClear(squareFrom,squareTo,boardCopy) &&
                         evaluateNormalMove(squareFrom,squareTo,currentPlayer));
                 break;
         }
@@ -124,7 +177,7 @@ public class ChessProject {
     private ArrayList<Move> getAllValidMoves(Position current, ChessBoard boardCopy, PieceColor currentPlayer){
         ArrayList<Move> validMoves = new ArrayList<Move>();
 
-        System.out.println("Running algorithm to validate all valid moves.....");
+//        System.out.println("Running algorithm to validate all valid moves.....");
         //Disable comments temporarily to prevent spamming
         commentsEnabled = false;
 
@@ -132,8 +185,8 @@ public class ChessProject {
         //Loop through all squares to validate if all valid moves from current position
         for(Integer i =0; i < 8; i++){
             for(Integer j =0; j < 8; j++){
-                if(evaluateMove(boardCopy.getSquare(current), allSquares[i][j],currentPlayer)){
-                    validMoves.add(new Move(boardCopy.getSquare(current),allSquares[i][j]));
+                if(evaluateMove(boardCopy.getSquare(current), allSquares[i][j],currentPlayer,boardCopy)){
+                    validMoves.add(new Move(boardCopy.getSquare(current).getPosition(),allSquares[i][j].getPosition()));
                 }
             }
         }
@@ -148,16 +201,16 @@ public class ChessProject {
      * @param validMoves
      * @return
      */
-    private ArrayList<Move> getValidAttackMoves(ArrayList<Move> validMoves){
+    private ArrayList<Move> getValidAttackMoves(ArrayList<Move> validMoves, ChessBoard boardCopy){
         ArrayList<Move> validAttackMoves = new ArrayList<Move>();
 
-        System.out.println("Running algorithm to validate all valid attacks moves.....");
+//        System.out.println("Running algorithm to validate all valid attacks moves.....");
         //Disable comments temporarily to prevent spamming
         commentsEnabled = false;
 
         //Check all landing squares of the moves to see if there is a piece to catch
         for(Move checkMove : validMoves){
-            if(checkMove.getLanding().piecePresent()){
+            if(boardCopy.getSquare(checkMove.getLanding()).piecePresent()){
                 validAttackMoves.add(checkMove);
             }
         }
@@ -171,9 +224,9 @@ public class ChessProject {
      * Validates if king is under attack in possible attack moves
      * @return
      */
-    private boolean checkKingAttack(ArrayList<Move> validAttackMoves){
+    private boolean checkKingAttack(ArrayList<Move> validAttackMoves, ChessBoard boardCopy){
         for(Move checkMove : validAttackMoves){
-            if(checkMove.getLanding().getPiece().getType() == PieceType.KING){
+            if(boardCopy.getSquare(checkMove.getLanding()).getPiece().getType() == PieceType.KING){
                 return true;
             }
         }
@@ -188,7 +241,37 @@ public class ChessProject {
      * @return
      */
     private boolean isCheck(PieceColor color, ChessBoard boardCopy){
+        boolean isCheck = false;
+        PieceColor otherPlayer;
+        if(color == PieceColor.WHITE){
+            otherPlayer = PieceColor.BLACK;
+        }else{
+            otherPlayer = PieceColor.WHITE;
+        }
 
+
+        for(Square piece :  getAllofColor(otherPlayer, boardCopy)){
+            ArrayList<Move> validMoves = getAllValidMoves(piece.getPosition(),boardCopy,otherPlayer);
+            ArrayList<Move> validAttackMoves = getValidAttackMoves(validMoves, boardCopy);
+            if(checkKingAttack(validAttackMoves,boardCopy)){
+                isCheck = true;
+                if (commentsEnabled) {
+                    System.out.println(color + " King is under check from " + piece.getPiece().getType() +
+                            " at location: x" +  piece.getPosition().getX() + ", y" + piece.getPosition().getY());
+                }
+            }
+        }
+
+        return isCheck;
+    }
+
+
+    private boolean isCheckMate(Square squareFrom){
+        //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
+        if(squareFrom.getPiece().getType() == PieceType.KING){
+            gameOver = true;
+            return true;
+        }
         return false;
     }
 
@@ -206,9 +289,11 @@ public class ChessProject {
         //Loop through all squares and check if piece is present of the given color
         for(Integer i =0; i < 8; i++){
             for(Integer j =0; j < 8; j++){
-                if(allSquares[i][j].piecePresent() & allSquares[i][j].getPiece().getColor() == color){
-                    //add square to list
-                    singleColor.add(allSquares[i][j]);
+                if(allSquares[i][j].piecePresent()){
+                    if(allSquares[i][j].getPiece().getColor() == color){
+                        //add square to list
+                        singleColor.add(allSquares[i][j]);
+                    }
                 }
             }
         }
@@ -218,15 +303,6 @@ public class ChessProject {
 
 
 
-    private boolean isCheckMate(Square squareFrom){
-        //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
-        if(squareFrom.getPiece().getType() == PieceType.KING){
-            gameOver = true;
-            return true;
-        }
-        return false;
-    }
-
 
     /**
      *  Checks if the path is clear the piece wants to move.
@@ -234,16 +310,16 @@ public class ChessProject {
      * @param squareTo
      * @return
      */
-    private boolean isPathClear(Square squareFrom,Square squareTo){
+    private boolean isPathClear(Square squareFrom,Square squareTo, ChessBoard boardCopy){
         boolean isClear = true;
         ArrayList<Position> positions =  squareFrom.getPiece().returnPath(squareFrom.getPosition(),squareTo.getPosition());
         if(commentsEnabled){System.out.print("Pieces in path are: ");}
 
         for(Position pos : positions) {
-            if (board.getSquare(pos).piecePresent()) {
+            if (boardCopy.getSquare(pos).piecePresent()) {
                 isClear = false;
                 if (commentsEnabled) {
-                    System.out.println("postion: " + "x" + pos.getX() + " - " + "y" + pos.getY() + "   occupied by: " + (board.getSquare(pos).getPiece().getType() + "!"));
+                    System.out.println("postion: " + "x" + pos.getX() + " - " + "y" + pos.getY() + "   occupied by: " + (boardCopy.getSquare(pos).getPiece().getType() + "!"));
                 }
                 return isClear;
             }
@@ -258,17 +334,17 @@ public class ChessProject {
      * @param to
      * @param squareFrom
      */
-    private void promotePawn(Position to,Square squareFrom){
+    private void promotePawn(Position to,Square squareFrom, ChessBoard boardCopy){
         if(squareFrom.getPiece().getColor() == PieceColor.WHITE && to.getY() == 7){
-            board.setPiece(to, new Queen(PieceColor.WHITE));
+            boardCopy.setPiece(to, new Queen(PieceColor.WHITE));
             if(commentsEnabled){System.out.println("White pawn promoted to White Queen!");}
         }
         else if(squareFrom.getPiece().getColor() == PieceColor.BLACK && to.getY() == 0){
-            board.setPiece(to, new Queen(PieceColor.BLACK));
+            boardCopy.setPiece(to, new Queen(PieceColor.BLACK));
             if(commentsEnabled){System.out.println("Black pawn promoted to Black Queen!");}
         }
         else{
-            board.setPiece(to, squareFrom.getPiece());
+            boardCopy.setPiece(to, squareFrom.getPiece());
         }
     }
 

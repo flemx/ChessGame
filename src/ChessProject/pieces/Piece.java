@@ -28,6 +28,13 @@ public abstract class Piece {
         this.pieceColor = pieceColor;
     }
 
+
+    public Piece(Piece pieceCopy){
+        this.pieceType = pieceCopy.getType();
+        this.pieceColor = pieceCopy.getColor();
+    }
+
+
     /**
      *  Getters for pieceType & pieceColor
      */

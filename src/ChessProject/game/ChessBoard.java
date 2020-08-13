@@ -11,13 +11,27 @@ public class ChessBoard {
     private Square[][] boardSquares;
 
 
-
+    /**
+     * Default constructor
+     */
     public ChessBoard(){
         boardSquares  = new Square[8][8];
 
         initializeSquares();
         initializePieces();
 
+    }
+
+    /**
+     * constructor to allow clone of object
+     */
+    public ChessBoard(ChessBoard boardCopy){
+        boardSquares  = new Square[8][8];
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                boardSquares[x][y] = new Square((boardCopy.getBoardSquares()[x][y]));
+            }
+        }
     }
 
     /**

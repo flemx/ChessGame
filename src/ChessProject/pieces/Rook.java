@@ -29,11 +29,9 @@ public class Rook extends Piece {
 
         for(Integer i = 1; i < steps; i++) {
             if(fromPos.getX() == toPos.getX()){
-                System.out.println("true1");
                 positions.add(new Position(fromPos.getX(),minY+i));
             }
             if(fromPos.getY() == toPos.getY()){
-                System.out.println("true2");
                 positions.add(new Position(minX+i,fromPos.getY()));
             }
         }

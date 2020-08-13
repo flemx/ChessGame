@@ -20,6 +20,15 @@ public class Square{
         this.position = position;
     }
 
+    /**
+     *  Create clone of square
+     * @param squareCopy
+     */
+    public Square(Square squareCopy){
+        this.position =  new Position(squareCopy.getPosition());
+        this.piece = squareCopy.getPiece();
+    }
+
 
     /**
      * Setter and getter for piece

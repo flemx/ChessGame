@@ -11,7 +11,7 @@ public class Position {
     private int yPos;
 
 
-    /**
+       /**
      * Constructor
      * @param yPos
      * @param xPos
@@ -21,6 +21,10 @@ public class Position {
         this.xPos = xPos;
     }
 
+    public Position(Position positionClone){
+        this.yPos = positionClone.getY();
+        this.xPos = positionClone.getX();
+    }
 
     /**
      *  Make ure that the position is not outside of bounds
