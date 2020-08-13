@@ -174,7 +174,7 @@ public class ChessProject {
      *  Return all valid moves on the given board from current position
      * @return
      */
-    private ArrayList<Move> getAllValidMoves(Position current, ChessBoard boardCopy, PieceColor currentPlayer){
+    public ArrayList<Move> getAllValidMoves(Position current, ChessBoard boardCopy, PieceColor currentPlayer){
         ArrayList<Move> validMoves = new ArrayList<Move>();
 
 //        System.out.println("Running algorithm to validate all valid moves.....");
