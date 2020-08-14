@@ -85,9 +85,12 @@ public class ChessProject {
 //        System.out.println("Check piece before: " + squareFrom.piecePresent());
         System.out.println("Running simulation to verify if move makes player check...");
         ChessBoard SimulatedBoardMove = simulateMove(move, new ChessBoard(board), player);
+
         if(isCheck(player, SimulatedBoardMove)){
+                System.out.println("Moves makes "+ player +" check!");
+
             //Check if player is checkmate
-            if(isCheckMate(player, new ChessBoard(board))){
+            if(isCheckMate(player, SimulatedBoardMove)){
                 System.out.println("Player " + player + " is checkmate!");
                 gameOver = true;
             }
@@ -252,10 +255,10 @@ public class ChessProject {
      */
     private boolean isCheck(PieceColor color, ChessBoard boardCopy){
         boolean isCheck = false;
-        PieceColor otherPlayer;
+        PieceColor otherPlayer =  PieceColor.BLACK ;
         if(color == PieceColor.WHITE){
             otherPlayer = PieceColor.BLACK;
-        }else{
+        }if(color == PieceColor.BLACK){
             otherPlayer = PieceColor.WHITE;
         }
 
@@ -265,10 +268,10 @@ public class ChessProject {
             ArrayList<Move> validAttackMoves = getValidAttackMoves(validMoves, boardCopy);
             if(checkKingAttack(validAttackMoves,boardCopy)){
                 isCheck = true;
-                if (commentsEnabled) {
-                    System.out.println(color + " King is under check from " + piece.getPiece().getType() +
-                            " at location: x" +  piece.getPosition().getX() + ", y" + piece.getPosition().getY());
-                }
+//                if (commentsEnabled) {
+//                    System.out.println(color + " King is under check from " + piece.getPiece().getType() +
+//                            " at location: x" +  piece.getPosition().getX() + ", y" + piece.getPosition().getY());
+//                }
             }
         }
 
@@ -441,6 +444,9 @@ public class ChessProject {
                 gameOver = true;
             }
         }
+        if(activePlayer == PieceColor.BLACK){
+
+        }
 
     }
 
@@ -449,7 +455,7 @@ public class ChessProject {
      */
     private void makeAiMove(){
 
-//        // Create move
+        // Create move
 //        Move move = new Move(board.getSquare(start).getPosition(), board.getSquare(landing).getPosition());
 //
 //        if(board.getSquare(move.getStart()).getPiece().getColor() == activePlayer){
