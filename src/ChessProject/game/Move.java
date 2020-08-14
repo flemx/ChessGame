@@ -3,7 +3,7 @@ package ChessProject.game;
 
 /**
  * @author Damien Fleminks
- * Move class to hold current square and square it wants to move to
+ * Move class to hold current square / position and square / position it wants to move to
  */
 
 public class Move {
@@ -11,10 +11,31 @@ public class Move {
     private Position start;
     private Position landing;
 
+    private Square squarFrom;
+    private Square squarTo;
 
+    /**
+     * Create Move with positions
+     * @param start
+     * @param landing
+     */
     public Move(Position start, Position landing) {
         this.start = start;
         this.landing = landing;
+    }
+
+    /**
+     * Create move with squares
+     * @param squarFrom
+     * @param squarTo
+     */
+    public Move(Square squarFrom, Square squarTo) {
+        this.squarFrom = new Square(squarFrom);
+        this.squarTo = new Square(squarTo);
+    }
+
+    public Move() {
+
     }
 
     public Position getStart() {
@@ -23,5 +44,21 @@ public class Move {
 
     public Position getLanding() {
         return landing;
+    }
+
+    public Square getSquarFrom() {
+        return squarFrom;
+    }
+
+    public Square getSquarTo() {
+        return squarTo;
+    }
+
+    public void setSquarFrom(Square squarFrom) {
+        this.squarFrom = squarFrom;
+    }
+
+    public void setSquarTo(Square squarTos) {
+        this.squarTo = squarTos;
     }
 }

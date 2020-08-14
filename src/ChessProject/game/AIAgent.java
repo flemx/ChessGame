@@ -18,7 +18,7 @@ public class AIAgent {
      * @return
      */
     public static Move makeMove(String moveType, ArrayList<Move> allValidMoves){
-        if(moveType.equals("g eedy")){
+        if(moveType.equals("greedy")){
             return(greedyMove(allValidMoves));
         }
         if(moveType.equals("twoLevelMove")){
@@ -38,11 +38,14 @@ public class AIAgent {
     private static Move randomMove(ArrayList<Move> allValidMoves){
 
         int moveNum = new Random().nextInt(allValidMoves.size());
+        if(moveNum == allValidMoves.size()){
+            moveNum = moveNum -1;
+        }
         Move move = allValidMoves.get(moveNum);
 
         System.out.println("AI Agent randomly selected move, from x"
-                + move.getStart().getX()+ "-y"+move.getStart().getY() + " to x" +
-                move.getLanding().getX() + "-y" + move.getLanding().getY());
+                + move.getSquarFrom().getPosition().getX()+ "-y"+move.getSquarFrom().getPosition().getY() + " to x" +
+                move.getSquarTo().getPosition().getX() + "-y" + move.getSquarTo().getPosition().getY());
         return move;
     }
 

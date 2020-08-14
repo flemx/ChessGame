@@ -2,6 +2,7 @@ package ChessProject.game;
 
 import ChessProject.pieces.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +21,12 @@ public class ChessProject {
     private boolean gameOver;
 
     private boolean commentsEnabled = true;
+
+    //Difficulty levels
+    private String levels[] = {"random","greedy","twoLevelMove"};
+
+    //Selected difficulty level (Default on random)
+    private String currentLevel = levels[0];
 
     public ChessProject(){
         gameOver = false;
@@ -445,7 +452,7 @@ public class ChessProject {
             }
         }
         if(activePlayer == PieceColor.BLACK){
-
+            makeAiMove(activePlayer);
         }
 
     }
@@ -453,16 +460,38 @@ public class ChessProject {
     /**
      *  Method that makes an AI move from the AI Agent
      */
-    private void makeAiMove(){
+    private void makeAiMove(PieceColor player){
+        //Get all  currentLevel
+        Move moveChoosen;
+        ArrayList<Move> allValidMoves = new ArrayList<>();
+        ArrayList<Square> pieces = getAllofColor(player, board);
+        for(Square piece : pieces){
+            for(Move move : getAllValidMoves(piece.getPosition(), board, player)){
+                ChessBoard SimulatedBoardMove = simulateMove(move, new ChessBoard(board), player);
+                if(!isCheck(player, SimulatedBoardMove)){
+                    Move tempMove = new Move();
+                    tempMove.setSquarFrom(new Square(move.getStart(), board.getSquare(move.getStart()).getPiece()));
+                    tempMove.setSquarTo(new Square(move.getLanding(),board.getSquare(move.getLanding()).getPiece()));
+                    allValidMoves.add(tempMove);
+                }
+            }
+        }
+        System.out.println("--------------------------------------------------");
+        System.out.println("AI makes calculated move with difficulty: " + currentLevel);
 
-        // Create move
-//        Move move = new Move(board.getSquare(start).getPosition(), board.getSquare(landing).getPosition());
-//
-//        if(board.getSquare(move.getStart()).getPiece().getColor() == activePlayer){
-//            movePiece(move,activePlayer);
-//        }else{
-//            System.out.println("It is the other players turn");
-//        }
+        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves);
+            if( evaluateMove(moveChoosen.getSquarFrom(), moveChoosen.getSquarTo(),player,board)){
+            // Set piece and check for pawn promotion
+            if(moveChoosen.getSquarFrom().getPiece().getType() == PieceType.PAWN){
+                promotePawn(moveChoosen.getSquarTo().getPosition(), moveChoosen.getSquarFrom(), board);
+            }else{
+                board.setPiece(moveChoosen.getSquarTo().getPosition(), moveChoosen.getSquarFrom().getPiece());
+            }
+
+            board.removePiece(moveChoosen.getSquarFrom().getPosition());
+            changePlayer();
+        }
+        System.out.println("--------------------------------------------------");
     }
 
     /**

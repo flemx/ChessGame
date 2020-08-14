@@ -21,6 +21,16 @@ public class Square{
     }
 
     /**
+     *  Create square with piece
+     * @param position
+     */
+    public Square(Position position, Piece piece){
+        this.position = position;
+        this.piece = piece;
+    }
+
+
+    /**
      *  Create clone of square
      * @param squareCopy
      */

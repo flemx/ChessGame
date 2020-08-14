@@ -103,16 +103,16 @@ public class ChessBoard {
      * @return
      */
     public Square getSquare(Position position){
-        if(position.getX() == 8){
+        if(position.getX() >= 8){
             position.setX(7);
         }
-        if(position.getX() == -1){
+        if(position.getX() <= -1){
             position.setX(1);
         }
-        if(position.getY() == 8){
+        if(position.getY() >= 8){
             position.setY(7);
         }
-        if(position.getY() == -1){
+        if(position.getY() <= -1){
             position.setY(1);
         }
         return boardSquares[position.getX()][position.getY()];
