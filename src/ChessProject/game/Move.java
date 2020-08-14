@@ -14,6 +14,9 @@ public class Move {
     private Square squarFrom;
     private Square squarTo;
 
+    // Hold board positions for advanced AI calculations
+    private ChessBoard boardSimulation;
+
     /**
      * Create Move with positions
      * @param start
@@ -60,5 +63,13 @@ public class Move {
 
     public void setSquarTo(Square squarTos) {
         this.squarTo = squarTos;
+    }
+
+    public ChessBoard getBoardSimulation() {
+        return boardSimulation;
+    }
+
+    public void setBoardSimulation(ChessBoard boardSimulation) {
+        this.boardSimulation = new ChessBoard(boardSimulation);
     }
 }

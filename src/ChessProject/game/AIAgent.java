@@ -1,4 +1,5 @@
 package ChessProject.game;
+import ChessProject.pieces.*;
 import java.util.*;
 
 /**
@@ -17,9 +18,9 @@ public class AIAgent {
      * @param allValidMoves
      * @return
      */
-    public static Move makeMove(String moveType, ArrayList<Move> allValidMoves, ChessBoard board){
+    public static Move makeMove(String moveType, ArrayList<Move> allValidMoves, ChessBoard board, ChessProject manager){
         if(moveType.equals("greedy")){
-            return(greedyMove(allValidMoves));
+            return(greedyMove(allValidMoves,board,manager));
         }
         if(moveType.equals("twoLevelMove")){
             return(twoLevelMove(allValidMoves));
@@ -54,10 +55,51 @@ public class AIAgent {
      * @param allValidMoves
      * @return
      */
-    private static Move greedyMove(ArrayList<Move> allValidMoves){
+    private static Move greedyMove(ArrayList<Move> allValidMoves, ChessBoard board, ChessProject manager){
+        //First check is there are any check moves
+        ArrayList<Move> checkMoves = new ArrayList<>();
+        for(Move move : allValidMoves){
+            //see if move make other player check trough simulation
+            ChessBoard SimulatedBoardMove = manager.simulateMove(move, new ChessBoard(board), manager.getActivePlayer());
+            //If a check attack move is found, see if the move also makes checkmate
+            if(manager.isCheck(manager.getActivePlayer(), SimulatedBoardMove)) {
+                checkMoves.add(move);
+                //Return checkmate move if found
+                if (manager.isCheckMate(manager.getActivePlayer(), SimulatedBoardMove)) {
+                    return move;
+                } else {
+                    //See which check moves also have attack pieces and add them to list
+                    ArrayList<Move> checkAttackMoves = new ArrayList<>();
+                    for (Move attackCheckMove : allValidMoves) {
+                        if (attackCheckMove.getSquarTo().piecePresent()) {
+                            checkAttackMoves.add(attackCheckMove);
+                        }
+                    }
+                    //If attack check moves have been found return the move which takes the highest piece
+                    if (checkAttackMoves.size() > 0) {
+                        return selectBestPiece(checkAttackMoves);
+                    } else {
+                        //return random check move if no attack move
+                        return randomMove(checkMoves);
+                    }
+                }
+            }else{
+                // If no check moves found, check for attack move and add to list
+                ArrayList<Move> attackMoves = new ArrayList<>();
+                for(Move attackMove : allValidMoves){
+                    if(attackMove.getSquarTo().piecePresent()){
+                        attackMoves.add(attackMove);
+                    }
+                }
+                // If attack moves are available, return most valuable piece
+                if(attackMoves.size() > 0){
+                    return selectBestPiece(attackMoves);
+                }
+            }
 
-
-        return allValidMoves.get(0);
+        }
+        //If no check or attack moves have been found, return random move
+        return randomMove(allValidMoves);
     }
 
     /**
@@ -69,6 +111,51 @@ public class AIAgent {
 
 
         return allValidMoves.get(0);
+    }
+
+    /**
+     * Method to return a piece with the highest value
+     * @param moves
+     * @return
+     */
+    private static Move selectBestPiece(ArrayList<Move> moves){
+
+
+        //Return Queen if present
+        for(Move QueenMove : moves){
+            if(QueenMove.getSquarTo().piecePresent() &&
+                    QueenMove.getSquarTo().getPiece().getType() == PieceType.QUEEN){
+                return QueenMove;
+            }
+        }
+
+        //Return Rook if present
+        for(Move rookMove : moves){
+            if(rookMove.getSquarTo().piecePresent() &&
+                    rookMove.getSquarTo().getPiece().getType() == PieceType.ROOK){
+                return rookMove;
+            }
+        }
+
+        //Return Knight if present
+        for(Move knightBishopMove : moves){
+            if(knightBishopMove.getSquarTo().piecePresent() &&
+                    (knightBishopMove.getSquarTo().getPiece().getType() == PieceType.KNIGHT ||
+                            knightBishopMove.getSquarTo().getPiece().getType() == PieceType.BISHOP)){
+                return knightBishopMove;
+            }
+        }
+
+        //Return Pawn if present
+        for(Move pawnMove : moves){
+            if(pawnMove.getSquarTo().piecePresent() &&
+                    pawnMove.getSquarTo().getPiece().getType() == PieceType.PAWN){
+                return pawnMove;
+            }
+        }
+
+
+        return moves.get(0);
     }
 
 

@@ -137,7 +137,7 @@ public class ChessProject {
      * @param player
      * @return
      */
-    private ChessBoard simulateMove(Move move, ChessBoard boardCopy, PieceColor player){
+    public ChessBoard simulateMove(Move move, ChessBoard boardCopy, PieceColor player){
 
         commentsEnabled = false;
         Square squareFrom = boardCopy.getSquare(move.getStart());
@@ -164,7 +164,7 @@ public class ChessProject {
      * @param squareTo
      * @return
      */
-    private boolean evaluateMove(Square squareFrom, Square squareTo, PieceColor currentPlayer, ChessBoard  boardCopy){
+    public boolean evaluateMove(Square squareFrom, Square squareTo, PieceColor currentPlayer, ChessBoard  boardCopy){
         boolean canMove;
 //        System.out.println("evaluateMove Piece: x" + squareFrom.getPosition().getX() + ", y" + squareFrom.getPosition().getY());
 //        System.out.println("Piece present? " + squareFrom.piecePresent());
@@ -221,7 +221,7 @@ public class ChessProject {
      * @param validMoves
      * @return
      */
-    private ArrayList<Move> getValidAttackMoves(ArrayList<Move> validMoves, ChessBoard boardCopy){
+    public ArrayList<Move> getValidAttackMoves(ArrayList<Move> validMoves, ChessBoard boardCopy){
         ArrayList<Move> validAttackMoves = new ArrayList<Move>();
 
 //        System.out.println("Running algorithm to validate all valid attacks moves.....");
@@ -244,7 +244,7 @@ public class ChessProject {
      * Validates if king is under attack in possible attack moves
      * @return
      */
-    private boolean checkKingAttack(ArrayList<Move> validAttackMoves, ChessBoard boardCopy){
+    public boolean checkKingAttack(ArrayList<Move> validAttackMoves, ChessBoard boardCopy){
         for(Move checkMove : validAttackMoves){
             if(boardCopy.getSquare(checkMove.getLanding()).getPiece().getType() == PieceType.KING){
                 return true;
@@ -260,7 +260,7 @@ public class ChessProject {
      * @param boardCopy
      * @return
      */
-    private boolean isCheck(PieceColor color, ChessBoard boardCopy){
+    public boolean isCheck(PieceColor color, ChessBoard boardCopy){
         boolean isCheck = false;
         PieceColor otherPlayer =  PieceColor.BLACK ;
         if(color == PieceColor.WHITE){
@@ -292,7 +292,7 @@ public class ChessProject {
      * @param boardCopy
      * @return
      */
-    private boolean isCheckMate(PieceColor color, ChessBoard boardCopy){
+    public boolean isCheckMate(PieceColor color, ChessBoard boardCopy){
         for(Square sqr : getAllofColor(color, boardCopy)){
             for(Move move : getAllValidMoves(sqr.getPosition(), boardCopy, color)){
                 //Make simulated move in cloned board
@@ -479,7 +479,7 @@ public class ChessProject {
         System.out.println("--------------------------------------------------");
         System.out.println("AI makes calculated move with difficulty: " + currentLevel);
 
-        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves, board);
+        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves, board, this);
             if( evaluateMove(moveChoosen.getSquarFrom(), moveChoosen.getSquarTo(),player,board)){
             // Set piece and check for pawn promotion
             if(moveChoosen.getSquarFrom().getPiece().getType() == PieceType.PAWN){
