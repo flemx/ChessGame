@@ -17,7 +17,7 @@ public class AIAgent {
      * @param allValidMoves
      * @return
      */
-    public static Move makeMove(String moveType, ArrayList<Move> allValidMoves){
+    public static Move makeMove(String moveType, ArrayList<Move> allValidMoves, ChessBoard board){
         if(moveType.equals("greedy")){
             return(greedyMove(allValidMoves));
         }

@@ -479,7 +479,7 @@ public class ChessProject {
         System.out.println("--------------------------------------------------");
         System.out.println("AI makes calculated move with difficulty: " + currentLevel);
 
-        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves);
+        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves, board);
             if( evaluateMove(moveChoosen.getSquarFrom(), moveChoosen.getSquarTo(),player,board)){
             // Set piece and check for pawn promotion
             if(moveChoosen.getSquarFrom().getPiece().getType() == PieceType.PAWN){
