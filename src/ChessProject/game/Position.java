@@ -17,8 +17,19 @@ public class Position {
      * @param xPos
      */
     public Position(int xPos, int yPos){
-        this.yPos = yPos;
-        this.xPos = xPos;
+        if(xPos == 8){
+            this.yPos = 7;
+        }else{
+            this.yPos = yPos;
+        }
+
+        if(yPos == 8){
+            this.xPos = 7;
+        }else{
+            this.xPos = xPos;
+        }
+
+
     }
 
     public Position(Position positionClone){

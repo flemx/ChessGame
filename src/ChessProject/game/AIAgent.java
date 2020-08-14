@@ -10,20 +10,62 @@ import java.util.*;
 
 public class AIAgent {
 
+
     /**
-     *  Take list off possible moves and return random move, the most simplest AI algorithm
-     * @param alValidMoves
+     *  Method to be called from game and decides which agent to use
+     * @param moveType
+     * @param allValidMoves
      * @return
      */
-    public static Move randomMove(ArrayList<Move> alValidMoves){
+    public static Move makeMove(String moveType, ArrayList<Move> allValidMoves){
+        if(moveType.equals("g eedy")){
+            return(greedyMove(allValidMoves));
+        }
+        if(moveType.equals("twoLevelMove")){
+            return(twoLevelMove(allValidMoves));
+        }
+        if(moveType.equals("random")){
+            return(randomMove(allValidMoves));
+        }
+        return null;
+    }
 
-        int moveNum = new Random().nextInt(alValidMoves.size());
-        Move move = alValidMoves.get(moveNum);
+    /**
+     *  Take list off possible moves and return random move, the most simplest AI algorithm
+     * @param allValidMoves
+     * @return
+     */
+    private static Move randomMove(ArrayList<Move> allValidMoves){
+
+        int moveNum = new Random().nextInt(allValidMoves.size());
+        Move move = allValidMoves.get(moveNum);
 
         System.out.println("AI Agent randomly selected move, from x"
                 + move.getStart().getX()+ "-y"+move.getStart().getY() + " to x" +
                 move.getLanding().getX() + "-y" + move.getLanding().getY());
         return move;
+    }
+
+    /**
+     *  This agent is capable of looking at all its possible moves and then deciding which move to make based on its evaluation function
+     * @param allValidMoves
+     * @return
+     */
+    private static Move greedyMove(ArrayList<Move> allValidMoves){
+
+
+        return allValidMoves.get(0);
+    }
+
+    /**
+     *  This agent is capable of looking ahead at least two moves to be able to decide what move to make
+     * @param allValidMoves
+     * @return
+     */
+    private static Move twoLevelMove(ArrayList<Move> allValidMoves){
+
+
+        return allValidMoves.get(0);
     }
 
 

@@ -50,6 +50,10 @@ public class ChessProject {
         }else{
             System.out.println("It is the other players turn");
         }
+        if(gameOver){
+            System.out.println("Game Over");
+            changePlayer();
+        }
     }
 
     /**
@@ -66,7 +70,7 @@ public class ChessProject {
         Square squareFrom = board.getSquare(move.getStart());
         Square squareTo = board.getSquare(move.getLanding());
 
-        Boolean canMove = false;
+        Boolean canMove;
 
 
         System.out.println("--------------------------------------------------");
@@ -82,6 +86,11 @@ public class ChessProject {
         System.out.println("Running simulation to verify if move makes player check...");
         ChessBoard SimulatedBoardMove = simulateMove(move, new ChessBoard(board), player);
         if(isCheck(player, SimulatedBoardMove)){
+            //Check if player is checkmate
+            if(isCheckMate(player, new ChessBoard(board))){
+                System.out.println("Player " + player + " is checkmate!");
+                gameOver = true;
+            }
             canMove = false;
         }else{
             System.out.println("No check found in simulations, continue the move...");
@@ -119,6 +128,7 @@ public class ChessProject {
      * @return
      */
     private ChessBoard simulateMove(Move move, ChessBoard boardCopy, PieceColor player){
+
         commentsEnabled = false;
         Square squareFrom = boardCopy.getSquare(move.getStart());
         Square squareTo = boardCopy.getSquare(move.getLanding());
@@ -266,13 +276,26 @@ public class ChessProject {
     }
 
 
-    private boolean isCheckMate(Square squareFrom){
-        //Check if King was captures (TO BE ADJUSTED TO CHECKMATE IN NEXT VERSION
-        if(squareFrom.getPiece().getType() == PieceType.KING){
-            gameOver = true;
-            return true;
+    /**
+     *  Evaluates all moves in a simulation to see if player is checkmate
+     * @param color
+     * @param boardCopy
+     * @return
+     */
+    private boolean isCheckMate(PieceColor color, ChessBoard boardCopy){
+        for(Square sqr : getAllofColor(color, boardCopy)){
+            for(Move move : getAllValidMoves(sqr.getPosition(), boardCopy, color)){
+                //Make simulated move in cloned board
+                ChessBoard tempBoard = simulateMove(move, boardCopy, color);
+                //With the new move check if player is still check, if there is a move that make player not check return false
+                if(!isCheck(color, tempBoard)){
+                    return false;
+                }
+
+            }
         }
-        return false;
+        //Return true if no move was found that prevents check, player is checkmate
+        return true;
     }
 
 
@@ -402,7 +425,8 @@ public class ChessProject {
 
 
     /**
-     *  Switch active player after a move
+     *  Switch active player after a move and check if it is checkmate
+     *  Trigger AI mode
      */
     private void changePlayer(){
         if(activePlayer == PieceColor.BLACK) {
@@ -410,6 +434,29 @@ public class ChessProject {
         }else{
             activePlayer = PieceColor.BLACK;
         }
+        ChessBoard  boardCopy = new ChessBoard(board);
+        if(isCheck(activePlayer, boardCopy)){
+            if(isCheckMate(activePlayer, boardCopy)){
+                System.out.println("Player " + activePlayer + " is checkmate!");
+                gameOver = true;
+            }
+        }
+
+    }
+
+    /**
+     *  Method that makes an AI move from the AI Agent
+     */
+    private void makeAiMove(){
+
+//        // Create move
+//        Move move = new Move(board.getSquare(start).getPosition(), board.getSquare(landing).getPosition());
+//
+//        if(board.getSquare(move.getStart()).getPiece().getColor() == activePlayer){
+//            movePiece(move,activePlayer);
+//        }else{
+//            System.out.println("It is the other players turn");
+//        }
     }
 
     /**
