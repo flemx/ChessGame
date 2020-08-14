@@ -20,6 +20,9 @@ public class ChessProject {
 
     private boolean gameOver;
 
+    //Set to true if you want the AI agent to play
+    private boolean enableAiAgent = true;
+
     private boolean commentsEnabled = true;
 
     //Difficulty levels
@@ -452,7 +455,9 @@ public class ChessProject {
             }
         }
         if(activePlayer == PieceColor.BLACK){
-            makeAiMove(activePlayer);
+            if(enableAiAgent){
+                makeAiMove(activePlayer);
+            }
         }
 
     }
@@ -479,7 +484,7 @@ public class ChessProject {
         System.out.println("--------------------------------------------------");
         System.out.println("AI makes calculated move with difficulty: " + currentLevel);
 
-        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves, board, this);
+        moveChoosen = new AIAgent().makeMove(currentLevel, allValidMoves,board, this);
             if( evaluateMove(moveChoosen.getSquarFrom(), moveChoosen.getSquarTo(),player,board)){
             // Set piece and check for pawn promotion
             if(moveChoosen.getSquarFrom().getPiece().getType() == PieceType.PAWN){
