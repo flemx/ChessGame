@@ -2,7 +2,6 @@ package ChessProject.game;
 
 import ChessProject.pieces.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
